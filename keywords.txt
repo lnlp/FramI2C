@@ -1,0 +1,17 @@
+FramI2C	KEYWORD1
+ResultCode	KEYWORD1
+begin	KEYWORD2
+end KEYWORD2
+read	KEYWORD2
+write	KEYWORD2
+fill	KEYWORD2
+readBytes	KEYWORD2
+writeBytes	KEYWORD2
+density	KEYWORD2
+i2cAddress	KEYWORD2
+memorySize	KEYWORD2
+pageSize	KEYWORD2
+pageCount	KEYWORD2
+typebufferSize	KEYWORD2
+isInitialized	KEYWORD2
+

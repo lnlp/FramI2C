@@ -74,7 +74,7 @@ FramI2C::ResultCode FramI2C::begin(const uint16_t densityInKiloBits, const uint8
     i2cAddress_ = i2cAddress;
     density_ = densityInKiloBits;
     memorySize_ = densityToMemorySize(densityInKiloBits);
-    addressByteCount_ = (pageSize_ == 0x100) ? 1 : 2;
+    addressBytesCount_ = (pageSize_ == 0x100) ? 1 : 2;
     pageCount_ = memorySize_ / pageSize_;
     initialized_ = true;
     deviceIdChecked_ = false;
@@ -102,11 +102,17 @@ void FramI2C::end(void)
     memorySize_ = 0;
     pageSize_ = 0;
     pageCount_ = 0;
-    addressByteCount_ = 0;
+    addressBytesCount_ = 0;
     deviceIdChecked_ = false;
     deviceIdSupported_ = false;
     manufacturerId_ = 0;
     productId_ = 0;    
+}
+
+
+uint8_t FramI2C::addressBytesCount(void) const
+{
+    return addressBytesCount_;
 }
 
 
@@ -226,12 +232,12 @@ FramI2C::ResultCode FramI2C::readBytes(const uint8_t page, const uint16_t addres
 
         size_t bytesQueued = 0;
         Wire.beginTransmission(pageI2cAddress);
-        if (addressByteCount_ > 1)
+        if (addressBytesCount_ > 1)
         {
             bytesQueued += Wire.write(framChunkAddress >> 8);
         }
         bytesQueued += Wire.write(framChunkAddress & 0xFF);
-        if (bytesQueued != addressByteCount_)
+        if (bytesQueued != addressBytesCount_)
         {
             return FramI2C::ResultCode::I2CWriteError;
         }  
@@ -309,7 +315,7 @@ FramI2C::ResultCode FramI2C::writeBytes(const uint8_t page, const uint16_t addre
     const uint8_t* dataChunk = data;
     uint16_t framChunkAddress = address;
     size_t totalBytesRemaining = byteCount;
-    size_t i2cBufferUsableLength = I2CBufferLength - addressByteCount_;
+    size_t i2cBufferUsableLength = I2CBufferLength - addressBytesCount_;
     ResultCode resultcode = ResultCode::Success;
 
     while(totalBytesRemaining > 0)
@@ -318,7 +324,7 @@ FramI2C::ResultCode FramI2C::writeBytes(const uint8_t page, const uint16_t addre
         
         size_t bytesQueued = 0;
         Wire.beginTransmission(pageI2cAddress);
-        if (addressByteCount_ > 1)
+        if (addressBytesCount_ > 1)
         {
             bytesQueued += Wire.write(framChunkAddress >> 8);   //MSB
         }
@@ -334,7 +340,7 @@ FramI2C::ResultCode FramI2C::writeBytes(const uint8_t page, const uint16_t addre
             bytesQueued += Wire.write(dataChunk, chunkSize);
         }
         
-        if (bytesQueued != addressByteCount_ + chunkSize)
+        if (bytesQueued != addressBytesCount_ + chunkSize)
         {     
             return FramI2C::ResultCode::I2CWriteError;
         }  
@@ -386,7 +392,7 @@ FramI2C::ResultCode FramI2C::fill(const uint8_t page, const uint16_t address, co
     uint8_t pageI2cAddress = i2cAddress_ + page;
     uint16_t framChunkAddress = address;
     size_t totalBytesRemaining = byteCount;
-    size_t i2cBufferUsableLength = I2CBufferLength - addressByteCount_;
+    size_t i2cBufferUsableLength = I2CBufferLength - addressBytesCount_;
     size_t bytesQueued = 0;
     ResultCode resultcode = ResultCode::Success;
 
@@ -396,7 +402,7 @@ FramI2C::ResultCode FramI2C::fill(const uint8_t page, const uint16_t address, co
         
         bytesQueued = 0;
         Wire.beginTransmission(pageI2cAddress);
-        if (addressByteCount_ > 1)
+        if (addressBytesCount_ > 1)
         {
             bytesQueued += Wire.write(framChunkAddress >> 8);   //MSB
         }
@@ -407,7 +413,7 @@ FramI2C::ResultCode FramI2C::fill(const uint8_t page, const uint16_t address, co
         {
             bytesQueued += Wire.write(value);
         }
-        if (bytesQueued != addressByteCount_ + chunkSize)
+        if (bytesQueued != addressBytesCount_ + chunkSize)
         {     
             return FramI2C::ResultCode::I2CWriteError;
         }  

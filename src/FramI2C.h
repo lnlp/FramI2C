@@ -9,6 +9,7 @@
  * 
  */
 
+
 #ifndef FRAMI2C_H_
 #define FRAMI2C_H_
 
@@ -62,6 +63,7 @@ public:
     uint16_t density(void) const;
     uint8_t i2cAddress(void) const;
     size_t memorySize(void) const;
+    uint8_t addressBytesCount(void) const;
     size_t pageSize(void) const;
     uint8_t pageCount(void) const;
     size_t typebufferSize(void) const; 
@@ -154,7 +156,7 @@ private:
     size_t memorySize_ = 0;
     size_t pageSize_ = 0;
     uint8_t pageCount_ = 0;
-    uint8_t addressByteCount_ = 0;
+    uint8_t addressBytesCount_ = 0;
     size_t typebufferSize_ = 0;
     uint8_t* typebuffer_ = nullptr;
     

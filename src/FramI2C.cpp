@@ -191,11 +191,12 @@ FramI2C::ResultCode FramI2C::readBytes(const uint16_t address, const size_t byte
 
 FramI2C::ResultCode FramI2C::readBytes(const uint8_t page, const uint16_t address, const size_t byteCount, uint8_t* const data) const
 {
-    // Reads byteCount bytes from FRAM page starting at memory address into data.
+    // Reads byteCount bytes from the specified FRAM page starting at memory address into data.
+    // The Wire library's I2C buffer has a limited size of 32 bytes. When byteCount is larger
+    // than the I2C buffer, data will automatically be transmitted in multiple smaller chunks.    
+    // Data is read in chunks that are (max) 32 bytes in size.    
     //
-    // In the datasheets this is described as 'selective address read' because an address is specified.
-    // The Wire library's I2C buffer has a hardcoded size of 32 bytes, so only max 32 bytes can be transferred at once.
-    // When byteCount is larger than the I2C buffer, data will automatically be read in multiple smaller chunks.
+    // The read operation performed is described in datasheets as 'selective address read' (because address is specified).
 
     if (!initialized_)
     {
@@ -278,10 +279,14 @@ FramI2C::ResultCode FramI2C::writeBytes(const uint16_t address, const size_t byt
 
 FramI2C::ResultCode FramI2C::writeBytes(const uint8_t page, const uint16_t address, const size_t byteCount, const uint8_t* const data) const
 {
-    // Writes byteCount bytes from data to FRAM page starting at memory address.
-    //
-    // The Wire library's I2C buffer has a limited size of 32 bytes. When byteCount is 
-    // larger than the I2C buffer, data will automatically be transmitted in multiple smaller chunks.
+    // Writes byteCount bytes from data to the specified FRAM page starting at memory address.
+    // The Wire library's I2C buffer has a limited size of 32 bytes. When byteCount is larger
+    // than the I2C buffer, data will automatically be transmitted in multiple smaller chunks.    
+    // Data is written in chunks that are (max) 30 or 31 bytes in size.
+    // 
+    // When writing to FRAM the memory address needs to be included in the I2C buffer, therefore the
+    // size of data that can be written per chunk is smaller than the size of the I2C buffer.
+    // FRAM with 16-bit addressing uses 2 address bytes, FRAM with 8-bit addressing uses 1 addres byte.
 
     if(!initialized_)
     {
@@ -363,6 +368,7 @@ FramI2C::ResultCode FramI2C::fill(const uint16_t address, const size_t byteCount
 FramI2C::ResultCode FramI2C::fill(const uint8_t page, const uint16_t address, const size_t byteCount, const uint8_t value) const
 {
     // Fills byteCount bytes of FRAM page starting at memory address, with value.
+    // Uses a mechanism similar to writeBytes by writing data in chunks (which is faster).
 
     if(!initialized_)
     {
@@ -426,10 +432,9 @@ FramI2C::ResultCode FramI2C::fill(const uint8_t page, const uint16_t address, co
 
 bool FramI2C::getDeviceId(void) const
 {
-    // Reads the device id (this is only supported on select FRAM's)
-    // Should be called only when FramI2C is initialized.
+    // Reads the device id (if the FRAM that is used supports it).
 
-    const uint8_t reservedSlaveAddress = 0x7C;
+    const uint8_t reservedSlaveAddress = 0x7C;  // See datasheets for information.
     const size_t deviceIdSize = 3;
     uint8_t deviceId[3];
 

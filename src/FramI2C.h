@@ -4,10 +4,10 @@
  *               It supports Cypress and Fujitsu I2C FRAM chips with densities from 4kb to 1Mb (bits)
  * 
  * Author:       Leonel Lopes Parente
+ * 
  * License:      MIT (see LICENSE file in repository root)
  * 
  */
-
 
 #ifndef FRAMI2C_H_
 #define FRAMI2C_H_

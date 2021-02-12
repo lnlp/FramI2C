@@ -42,7 +42,7 @@ FramI2C fram;
 ```
 
 The `fram` instance needs to be initialized before it can be used. This is done by calling `fram.begin()`. FramI2C needs to access the I2C bus and uses the Wire library for this. The I2C bus is a shared resource that should therefore be initialized by the application (and not by libraries). The application must therefore #include Wire.h and call `Wire.begin()`. `Wire.begin()` must be called before `FramI2C.begin()` is called.<br>
-`FramI2C.begin()` supports multiple parameters. At least one parameter has to be specified: the density of the FRAM chip in kilobytes. The other parameters are optional and have default values. Specifying the correct density is essential for proper operation. While begin() will check if the density is supported, it cannot check if the specified density matches the actual density of the FRAM chip.<br>
+`FramI2C.begin()` supports multiple parameters. At least one parameter has to be specified: the density of the FRAM chip in kilobits. The other parameters are optional and have default values. Specifying the correct density is essential for proper operation. While begin() will check if the density is supported, it cannot check if the specified density matches the actual density of the FRAM chip.<br>
 For a chip with density 64 kb (with default I2C address 0x50) the FramI2C instance can be initialized in setup() as follows:
 
 ```cpp

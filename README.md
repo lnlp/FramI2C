@@ -3,7 +3,7 @@
 FramI2C is an Arduino library for FRAM (F-FRAM, Ferroelectric RAM) non-volatile memory chips with I2C interface.
 - Supports most common Cypress and Fujitsu I2C FRAM chips with densities of 4, 16, 64, 128, 256, 512, and 1024 kilobits (kb).
 - Provides simple, easy to use `read()` and `write()` methods for reading/writing integral and floating point types (uses automatic type inference and byte conversion), `readBytes()` and `writeBytes()` for reading/writing larger amounts of data as byte array, and `fill()` to fill or clear a range of FRAM memory.
-- If an FRAM chip contains multiple pages, memory access is handled per page. The user only needs to specify a specific page number. The underlying complexity of how how this needs to be converted to different I2C addresses is hidden from the user.
+- If an FRAM chip contains multiple memory pages, memory access is handled per page. The user only needs to specify a specific page number. The underlying complexity of how how this needs to be translated to different I2C addresses is hidden from the user.
 <br>
 
 ## Introduction to FRAM

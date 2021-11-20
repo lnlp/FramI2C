@@ -1,9 +1,11 @@
 # FramI2C
 
-FramI2C is an Arduino library for reading from and writing tot FRAM (F-FRAM, Ferroelectric RAM) non-volatile memory chips with I2C interface. This library supports most common Cypress and Fujitsu I2C FRAM chips with densities of 4, 16, 64, 128, 256, 512, and 1024 kilobits (kb).
+FramI2C is an Arduino library for FRAM (F-FRAM, Ferroelectric RAM) non-volatile memory chips with I2C interface.<br> 
+Supports most common Cypress and Fujitsu I2C FRAM chips with densities of 4, 16, 64, 128, 256, 512, and 1024 kilobits (kb).<br>
+Provides simple, easy to use `read()` and `write()` methods for reading/writing integral and floating point types (with automatic type inference and byte conversion), `readBytes()` and `writeBytes()` for reading/writing larger amounts of data as byte array, and `fill()` to fill or clear a range of FRAM memory.
 <br>
 <br>
-#### Introduction to FRAM
+### Introduction to FRAM
 FRAM, F-RAM or FeRAM (Ferroelectric Random Access Memory) is nonvolatile RAM memory that combines the advantages of both RAM and nonvolatile memory like Flash and EEPROM. It is very suitable for storing data and settings in low-power applications. FRAM is available with different interfaces (I2C, SPI and parallel). This library is for FRAM with I2C interface. <br>
 FRAM has the following benefits when compared to Flash and EEPROM:
 * Fast symmetrical read and write times (access time < 100 ns).  
@@ -26,15 +28,15 @@ The library hides the complexity of I2C page addressing from the user and takes 
 
 ### The FramI2C library
 
-The library can be found at the following location: http://github.com/lnlp/FramI2C 
-
-The following include file is needed:
+To use the library the following include statement is needed:
 
 ```cpp
 #include "FramI2C.h"
 ```
 
-To use FramI2C an instance of the FramI2C class must be created. This does not require any parameters. Parameters are specified in `FramI2C.begin()`. *When using multiple FRAM chips, a separate instance must be created for each chip.* 
+In addition an instance of the FramI2C class must be created (without any parameters).<br>
+The FramI2C instance is configured by specifying parameters in a call to the `FramI2C.begin()` method.<br>
+*When using multiple FRAM chips, a separate instance must be created for each chip.* 
 
 ```cpp
 FramI2C fram;
